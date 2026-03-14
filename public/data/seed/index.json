@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "行气 · 种子内容 · 2026-03-05",
+  "artworks": [
+    {
+      "path": "/data/seed/art_mmd8k57j_rr64.json",
+      "themeId": "bamboo",
+      "duration": 16.09,
+      "alias": "ganze"
+    },
+    {
+      "path": "/data/seed/art_mmd8kyoi_k1s3.json",
+      "themeId": "bird",
+      "duration": 10.56,
+      "alias": "ganze"
+    },
+    {
+      "path": "/data/seed/art_mmd8lzz5_xi6w.json",
+      "themeId": "bird",
+      "duration": 16.85,
+      "alias": "ganze"
+    }
+  ]
+}

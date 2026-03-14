@@ -46,6 +46,10 @@ export const Events = {
   MATCH_LEVEL_CHANGE: 'match:levelChange',
   // App state
   STATE_CHANGE: 'state:change',
+  // Recording (Week 4)
+  RECORDING_START: 'recording:start',
+  RECORDING_STOP: 'recording:stop',
+  ARTWORK_SAVED: 'artwork:saved',
   // Debug
   DEBUG_TOGGLE: 'debug:toggle',
 };

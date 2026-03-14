@@ -3,8 +3,10 @@
  *
  * PRD 3.2: 用户点击"开始习练"后请求摄像头权限。
  * PRD 8.3: 所有姿态检测100%在浏览器端完成。
+ * PRD 7.4: 移动端默认前置摄像头。
  */
 import { bus, Events } from '../utils/EventBus.js';
+import { perfConfig } from '../utils/MobileDetect.js';
 
 export class CameraManager {
   /** @type {HTMLVideoElement} */
@@ -28,10 +30,10 @@ export class CameraManager {
     try {
       const constraints = {
         video: {
-          facingMode: 'user', // front camera
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          frameRate: { ideal: 30, max: 30 },
+          facingMode: 'user',
+          width: { ideal: perfConfig.cameraWidth },
+          height: { ideal: perfConfig.cameraHeight },
+          frameRate: { ideal: perfConfig.cameraFps, max: 30 },
         },
         audio: false,
       };

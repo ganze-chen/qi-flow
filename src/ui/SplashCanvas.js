@@ -9,7 +9,9 @@
  * bloom softly when near each other (like ink diffusion on wet paper).
  */
 
-const PARTICLE_COUNT = 35;
+import { perfConfig } from '../utils/MobileDetect.js';
+
+const PARTICLE_COUNT = perfConfig.splashCount;
 const BLOOM_DISTANCE = 80;
 
 export class SplashCanvas {

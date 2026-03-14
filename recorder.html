@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>行气 · 种子内容录制工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --ink-deepest: #1a1410;
+      --ink-dark: #2a2420;
+      --ink-mid: #4a4038;
+      --ink-light: #6a6058;
+      --ink-faint: #8a8078;
+      --xuan-paper: #f0ece4;
+      --xuan-warm: #e8e4dc;
+      --accent-gold: #c4a35a;
+      --accent-red: #b44;
+      --font-title: 'Noto Serif SC', serif;
+      --font-body: 'Noto Sans SC', sans-serif;
+    }
+    html, body {
+      width: 100%; height: 100%;
+      background: #f5f3ee;
+      font-family: var(--font-body);
+      color: var(--ink-dark);
+      overflow-x: hidden;
+    }
+
+    .app { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+
+    /* Header */
+    .header {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding-bottom: 16px;
+    }
+    .header h1 {
+      font-family: var(--font-title);
+      font-size: 1.3rem; letter-spacing: 0.15em;
+      color: var(--ink-deepest);
+    }
+    .header .badge {
+      font-size: 0.65rem; background: var(--accent-gold);
+      color: #fff; padding: 2px 8px; border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+    .back-link {
+      margin-left: auto; font-size: 0.8rem;
+      color: var(--ink-faint); text-decoration: none;
+    }
+    .back-link:hover { color: var(--ink-mid); }
+
+    /* Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 20px;
+    }
+    @media (max-width: 700px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Video panel */
+    .video-panel {
+      position: relative;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+    .video-panel video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    .video-panel canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .rec-indicator {
+      position: absolute; top: 14px; left: 14px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; color: #fff;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .rec-indicator.active { opacity: 1; }
+    .rec-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent-red);
+      animation: recBlink 1s infinite;
+    }
+    @keyframes recBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .rec-timer {
+      position: absolute; top: 14px; right: 14px;
+      font-family: monospace; font-size: 1.1rem;
+      color: #fff; opacity: 0; transition: opacity 0.3s;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    .rec-timer.active { opacity: 1; }
+    .status-badge {
+      position: absolute; bottom: 14px; left: 14px;
+      font-size: 0.7rem; color: #fff;
+      background: rgba(0,0,0,0.5);
+      padding: 3px 10px; border-radius: 4px;
+      backdrop-filter: blur(4px);
+    }
+    .joint-count {
+      position: absolute; bottom: 14px; right: 14px;
+      font-size: 0.65rem; color: rgba(255,255,255,0.6);
+      font-family: monospace;
+    }
+
+    /* Controls panel */
+    .controls {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .control-group {
+      background: #fff; border-radius: 8px;
+      padding: 14px 16px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .control-group h3 {
+      font-family: var(--font-title);
+      font-size: 0.8rem; color: var(--ink-mid);
+      letter-spacing: 0.08em; margin-bottom: 10px;
+    }
+    .control-group label {
+      display: block; font-size: 0.78rem;
+      color: var(--ink-light); margin-bottom: 4px;
+    }
+    .control-group select,
+    .control-group input[type="text"] {
+      width: 100%; padding: 6px 10px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 5px; font-size: 0.82rem;
+      font-family: var(--font-body);
+      background: var(--xuan-paper);
+      color: var(--ink-dark);
+      margin-bottom: 10px;
+    }
+    .control-group select:focus,
+    .control-group input:focus {
+      outline: none; border-color: var(--accent-gold);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px;
+      font-family: var(--font-title); font-size: 0.85rem;
+      letter-spacing: 0.08em; padding: 10px 0; width: 100%;
+      border: none; border-radius: 6px; cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn:hover { transform: scale(1.01); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-camera {
+      background: var(--ink-dark); color: var(--xuan-paper);
+    }
+    .btn-record {
+      background: var(--accent-red); color: #fff;
+    }
+    .btn-record.recording {
+      background: var(--ink-mid);
+    }
+    .btn-export {
+      background: var(--accent-gold); color: #fff;
+    }
+    .btn-secondary {
+      background: var(--xuan-warm); color: var(--ink-mid);
+    }
+
+    /* Recording list */
+    .recording-list {
+      margin-top: 8px;
+    }
+    .recording-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; font-size: 0.75rem;
+      color: var(--ink-mid);
+      background: var(--xuan-paper);
+      border-radius: 5px; margin-bottom: 6px;
+    }
+    .recording-item .theme-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .recording-item .info { flex: 1; }
+    .recording-item .actions {
+      display: flex; gap: 4px;
+    }
+    .recording-item .actions button {
+      font-size: 0.65rem; padding: 2px 8px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 3px; background: #fff;
+      cursor: pointer; color: var(--ink-mid);
+    }
+    .recording-item .actions button:hover {
+      background: var(--xuan-warm);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink-dark); color: var(--xuan-paper);
+      padding: 8px 20px; border-radius: 20px;
+      font-size: 0.8rem; letter-spacing: 0.05em;
+      opacity: 0; transition: opacity 0.3s;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>种子内容录制</h1>
+      <span class="badge">Week 4 · 工具</span>
+      <a href="/" class="back-link">← 返回行气</a>
+    </div>
+
+    <div class="main-grid">
+      <!-- Video Panel -->
+      <div class="video-panel" id="video-panel">
+        <video id="camera-feed" autoplay playsinline muted></video>
+        <canvas id="skeleton-canvas"></canvas>
+        <div class="rec-indicator" id="rec-indicator">
+          <div class="rec-dot"></div>
+          <span>REC</span>
+        </div>
+        <div class="rec-timer" id="rec-timer">00:00</div>
+        <div class="status-badge" id="status-badge">等待摄像头</div>
+        <div class="joint-count" id="joint-count"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <div class="control-group">
+          <h3>摄像头</h3>
+          <button class="btn btn-camera" id="btn-camera">启动摄像头</button>
+        </div>
+
+        <div class="control-group">
+          <h3>录制设置</h3>
+          <label for="theme-select">主题</label>
+          <select id="theme-select">
+            <option value="snow">踏雪留痕 · 冬</option>
+            <option value="bamboo">翠竹风声 · 夏</option>
+            <option value="bird">月下鸟群 · 秋</option>
+            <option value="stream">曲水流觞 · 春</option>
+          </select>
+          <label for="title-input">作品标题（可选）</label>
+          <input type="text" id="title-input" placeholder="留空则自动生成" />
+          <label for="alias-input">署名（可选）</label>
+          <input type="text" id="alias-input" placeholder="留空则随机生成" />
+        </div>
+
+        <div class="control-group">
+          <h3>操作</h3>
+          <button class="btn btn-record" id="btn-record" disabled>开始录制</button>
+          <div style="height:8px"></div>
+          <button class="btn btn-export" id="btn-export" disabled>导出为作品 JSON</button>
+          <div style="height:4px"></div>
+          <button class="btn btn-secondary" id="btn-export-all" disabled>批量导出所有录制</button>
+        </div>
+
+        <div class="control-group">
+          <h3>已录制 <span id="recording-count">0</span></h3>
+          <div class="recording-list" id="recording-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/src/recorder-main.js"></script>
+</body>
+</html>

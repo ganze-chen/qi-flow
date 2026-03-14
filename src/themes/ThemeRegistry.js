@@ -164,7 +164,7 @@ export const Themes = {
       color: [200, 200, 220],  // silver-white
       accumulates: false,
       boid: {
-        count: 300,              // number of bird particles
+        // count managed by renderer (mobile-aware via perfConfig)
         size: [1.5, 3.5],       // [min, max] particle radius
         baseColor: [60, 60, 90],  // dark indigo (unlit)
         litColor: [210, 215, 235], // silver-white (illuminated)
@@ -223,8 +223,7 @@ export const Themes = {
       color: [40, 50, 45],
       accumulates: false,
       wave: {
-        lineCount: 45,
-        pointsPerLine: 80,
+        // lineCount + pointsPerLine managed by renderer (mobile-aware)
         baseColor: [55, 70, 62],
         rippleColor: [30, 45, 38],
         lineOpacity: [0.06, 0.20],

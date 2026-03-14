@@ -14,6 +14,8 @@
  *   - Force strength carefully calibrated for visible-but-stable ripples
  */
 
+import { perfConfig } from '../../utils/MobileDetect.js';
+
 const WAVE_JOINTS = [
   { idx: 7, weight: 1.0 },   // L_wrist
   { idx: 8, weight: 1.0 },   // R_wrist
@@ -38,9 +40,9 @@ export class StreamInkRenderer {
     mirror: true,
     visibilityThreshold: 0.35,
 
-    // Grid
-    lineCount: 45,
-    pointsPerLine: 80,
+    // Grid — reduced on mobile for performance
+    lineCount: perfConfig.waveLineCount,
+    pointsPerLine: perfConfig.wavePointsPerLine,
 
     // Colors
     baseColor: [55, 70, 62],

@@ -11,6 +11,8 @@
  * with hand-position attraction and moonlight illumination.
  */
 
+import { perfConfig } from '../../utils/MobileDetect.js';
+
 export class BirdInkRenderer {
   ctx = null;
   canvas = null;
@@ -30,7 +32,7 @@ export class BirdInkRenderer {
   config = {
     mirror: true,
     visibilityThreshold: 0.3,
-    count: 300,
+    count: perfConfig.boidCount,
     size: [1.5, 3.5],
     baseColor: [60, 60, 90],
     litColor: [210, 215, 235],
